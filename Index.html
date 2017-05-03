@@ -1,0 +1,63 @@
+﻿<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <h2>Array Test</h2>
+    <div>
+        <input id="array" type="text" placeholder="input array" />
+        <button onclick="checkArray()">Check</button>
+        <label id="results">Press button to check array</label>
+    </div>
+</body>
+</html>
+
+<script>
+    var pattern = /\[(\d+)*(,\d+)*\]/;
+
+    function parseInput(strValue) {
+        var isValid = pattern.exec(strValue) != null;
+        if (!isValid) {
+            return null;
+        }
+
+        var array = JSON.parse(strValue);
+        return array;
+    }
+
+    function process(array) {
+        var counts = array.reduce(function (state, item) {
+            if (state[item] === undefined) {
+                state[item] = 0;
+            }
+            state[item]++;
+
+            return state;
+        },
+            {});
+
+        var results = [];
+        Object.keys(counts)
+            .forEach(function (key) {
+                var count = counts[key];
+                if (count >= 3)
+                    results.push(+key);
+            });
+
+        var sorted = results.sort(function (x, y) { return y - x; });
+        return sorted;
+    }
+
+    function checkArray() {
+        var strValue = document.getElementById('array').value;
+
+        var results;
+        var array = parseInput(strValue);
+        if (array) {
+            results = process(array);
+        }
+
+        var label = results ? JSON.stringify(results) : 'Error';
+        document.getElementById('results').innerText = label;
+    }
+</script>
